@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        ghc: ['8.10.7', '9.0.2', '9.2.4']
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Haskell
+      uses: haskell/actions/setup@v2
+      with:
+        ghc-version: ${{ matrix.ghc }}
+        cabal-version: '3.6'
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cabal/store
+          dist-newstyle
+        key: ${{ runner.os }}-${{ matrix.ghc }}-cabal-${{ hashFiles('**/*.cabal') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.ghc }}-cabal-
+
+    - name: Update package list
+      run: cabal update
+
+    - name: Install dependencies
+      run: cabal build --only-dependencies --enable-tests --enable-benchmarks
+
+    - name: Build
+      run: cabal build --enable-tests --enable-benchmarks all
+
+    - name: Run tests
+      run: cabal test all
+
+    - name: Check documentation
+      run: cabal haddock all
+
+    - name: Create documentation
+      if: matrix.ghc == '9.2.4'
+      run: |
+        cabal haddock all --haddock-hyperlink-source
+        tar czf documentation.tar.gz dist-newstyle/doc/
+
+    - name: Upload documentation
+      if: matrix.ghc == '9.2.4'
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: documentation.tar.gz
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Haskell
+      uses: haskell/actions/setup@v2
+      with:
+        ghc-version: '9.2.4'
+        cabal-version: '3.6'
+    
+    - name: Install HLint
+      run: cabal install hlint
+    
+    - name: Run HLint
+      run: hlint src/ app/ test/
