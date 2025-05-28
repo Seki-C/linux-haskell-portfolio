@@ -82,3 +82,7 @@ MIT License
 ## 作成者
 
 Linux OSとHaskellの学習を目的とした教育的プロジェクト
+
+## Claude PR Assistant
+
+このプロジェクトにはClaude PR Assistantが設定されており、PRでの@claudeメンションによるコードレビューとサポートが利用できます。
