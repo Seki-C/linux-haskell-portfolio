@@ -21,7 +21,7 @@ import qualified FileSystem.Permissions as Perms
 import qualified FileSystem.PathUtils as Path
 import qualified Shell.Parser as ShellParser
 import qualified Shell.Commands as ShellCmd
-import qualified Network.Socket as NetSock
+import qualified Network.SocketDemo as NetSock
 import qualified System.Memory as Memory
 
 main :: IO ()

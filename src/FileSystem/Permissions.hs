@@ -92,9 +92,9 @@ permissionsToOctal perms = fromIntegral $
 -- | 8進数表現をFilePermissionsに変換
 octalToPermissions :: OctalPermission -> FilePermissions
 octalToPermissions octal = 
-  let owner = fromIntegral $ octal `div` 100
-      group = fromIntegral $ (octal `div` 10) `mod` 10
-      other = fromIntegral $ octal `mod` 10
+  let owner = fromIntegral $ octal `div` 100 :: Int
+      group = fromIntegral $ (octal `div` 10) `mod` 10 :: Int
+      other = fromIntegral $ octal `mod` 10 :: Int
   in FilePermissions
     { ownerRead = testBit owner 2
     , ownerWrite = testBit owner 1

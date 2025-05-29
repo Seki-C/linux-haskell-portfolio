@@ -23,7 +23,7 @@ import qualified FileSystem.Permissions as Perms
 import qualified FileSystem.PathUtils as Path
 import qualified Process.Management as ProcMgmt
 import qualified Process.Communication as ProcComm
-import qualified Network.Socket as NetSock
+import qualified Network.SocketDemo as NetSock
 import qualified Network.Client as NetClient
 import qualified System.Calls as SysCalls
 import qualified System.Memory as Memory

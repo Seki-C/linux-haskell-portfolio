@@ -154,7 +154,7 @@ deleteDirectory' path = do
   if not exists
     then return $ Left (FileNotFound path)
     else do
-      result <- try $ Dir.removeDirectory path
+      result <- try $ Dir.removeDirectory path :: IO (Either IOException ())
       case result of
         Left err -> return $ Left (DirectoryNotEmpty path)
         Right _  -> return $ Right ()
@@ -202,8 +202,8 @@ getFileInfo path = do
   if not exists
     then return $ Left (FileNotFound path)
     else do
-      sizeResult <- try $ Dir.getFileSize path
-      timeResult <- try $ Dir.getModificationTime path
+      sizeResult <- try $ Dir.getFileSize path :: IO (Either IOException Integer)
+      timeResult <- try $ Dir.getModificationTime path :: IO (Either IOException UTCTime)
       case (sizeResult, timeResult) of
         (Right size, Right time) -> return $ Right (size, time)
         _ -> return $ Left (IOError "Failed to get file info")

@@ -51,7 +51,7 @@ import qualified System.FilePath as Path
 import qualified System.Directory as Dir
 import Control.Exception (try, IOException)
 import Data.List (isPrefixOf, isSuffixOf)
-import Text.Regex.Posix ((=~))
+-- import Text.Regex.Posix ((=~))
 
 -- | パスを正規化（冗長な . と .. を解決）
 normalizePath :: FilePath -> FilePath
@@ -209,31 +209,20 @@ isPathSafe baseDir requestedPath =
       canonicalFullPath = normalizePath fullPath
   in normalizedBase `isPrefixOf` canonicalFullPath
 
--- | globパターンにマッチするかチェック
+-- | globパターンにマッチするかチェック（簡易実装）
 matchGlob :: String -> FilePath -> Bool
-matchGlob pattern path = 
-  let regexPattern = globToRegex pattern
-  in path =~ regexPattern
+matchGlob pattern path = simpleGlobMatch pattern path
 
--- | globパターンを正規表現に変換
-globToRegex :: String -> String
-globToRegex = concatMap convertChar
-  where
-    convertChar '*' = ".*"
-    convertChar '?' = "."
-    convertChar '[' = "["
-    convertChar ']' = "]"
-    convertChar '\\' = "\\\\"
-    convertChar '.' = "\\."
-    convertChar '^' = "\\^"
-    convertChar '$' = "\\$"
-    convertChar '+' = "\\+"
-    convertChar '(' = "\\("
-    convertChar ')' = "\\)"
-    convertChar '{' = "\\{"
-    convertChar '}' = "\\}"
-    convertChar '|' = "\\|"
-    convertChar c = [c]
+-- | 簡易globマッチ実装
+simpleGlobMatch :: String -> String -> Bool
+simpleGlobMatch [] [] = True
+simpleGlobMatch [] _ = False
+simpleGlobMatch ('*':ps) str = any (simpleGlobMatch ps) (suffixes str)
+  where suffixes s = [drop i s | i <- [0..length s]]
+simpleGlobMatch ('?':ps) (_:str) = simpleGlobMatch ps str
+simpleGlobMatch ('?':_) [] = False
+simpleGlobMatch (p:ps) (s:str) | p == s = simpleGlobMatch ps str
+simpleGlobMatch _ _ = False
 
 -- | globパターンでファイルを展開
 expandGlob :: FilePath -> String -> IO [FilePath]
