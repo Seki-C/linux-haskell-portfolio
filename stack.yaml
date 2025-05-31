@@ -1,0 +1,77 @@
+# Stack configuration for linux-haskell-portfolio
+# Resolver specifies the Stackage snapshot to use
+resolver: lts-20.26  # GHC 9.2.8
+
+# Local packages, usually specified by relative directory name
+packages:
+- .
+
+# Packages to be pulled from upstream that are not in the resolver
+# extra-deps: []
+
+# Override default flag values for local packages and extra-deps
+# flags: {}
+
+# Extra package databases containing global packages
+# extra-package-dbs: []
+
+# Control whether we use the GHC we find on the path
+# system-ghc: true
+
+# Require a specific version of Stack, using version ranges
+# require-stack-version: ">=2.7"
+
+# Override the architecture used by Stack, especially useful on Windows
+# arch: i386
+# arch: x86_64
+
+# Extra directories used by Stack for building
+# extra-include-dirs: [/path/to/dir]
+# extra-lib-dirs: [/path/to/dir]
+
+# Allow a newer minor version of GHC than the snapshot specifies
+# compiler-check: newer-minor
+
+# Configure GHC options for all packages
+ghc-options:
+  # Apply to all packages
+  "*": -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+
+# Configure GHC options for local packages
+# local-packages:
+#   "*": -Wall
+
+# Build settings
+build:
+  # Build all executables
+  # executable-only: false
+  
+  # Copy compiled executables to local bin path
+  copy-bins: true
+  
+  # Install missing dependencies
+  install-missing: true
+
+# Test settings
+test:
+  # Run tests for all packages
+  # coverage: false
+  
+  # Keep test outputs even on success
+  # keep-going: false
+
+# Documentation settings  
+haddock:
+  # Build documentation for all packages including dependencies
+  # all: false
+  
+  # Build documentation even if dependencies are missing docs
+  # missing-docs: false
+
+# Development mode settings for faster builds
+# development: false
+
+# Nix integration (uncomment if using Nix)
+# nix:
+#   enable: true
+#   packages: []
